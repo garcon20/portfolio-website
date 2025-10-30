@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTT IT Workshop Tour</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary: #0056b3;
+            --primary-dark: #003d82;
+            --primary-light: #4d8ad3;
+            --secondary: #ffcc00;
+            --secondary-dark: #e6b800;
+            --accent: #28a745;
+            --dark: #333333;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --gray-light: #e9ecef;
+            --danger: #dc3545;
+            --border-radius: 12px;
+            --border-radius-sm: 8px;
+            --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+            --header-height: 70px;
+            --footer-height: 60px;
+        }
+
+        /* Dark Mode Variables */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --light: #1a1a1a;
+                --dark: #f8f9fa;
+                --gray-light: #2d2d2d;
+                --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                --box-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* App Layout */
+        .app {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: var(--box-shadow);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            box-shadow: var(--box-shadow);
+            font-size: 1.2rem;
+        }
+
+        .school-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .mobile-menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: var(--header-height);
+            right: -100%;
+            width: 80%;
+            max-width: 300px;
+            height: calc(100vh - var(--header-height));
+            background-color: var(--light);
+            box-shadow: var(--box-shadow-lg);
+            transition: var(--transition);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        nav.open {
+            right: 0;
+        }
+
+        nav ul {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        nav li {
+            margin-bottom: 10px;
+        }
+
+        nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 12px 15px;
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition);
+        }
+
+        nav a:hover, nav a.active {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        nav a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .nav-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            margin-top: var(--header-height);
+            padding-bottom: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 86, 179, 0.85), rgba(0, 61, 130, 0.9)), url('https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: var(--box-shadow);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-block {
+            width: 100%;
+        }
+
+        /* Section Styles */
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--box-shadow-lg);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 i {
+            color: var(--secondary);
+        }
+
+        /* Workshop Details */
+        .workshop-details .card ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .workshop-details .card li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Fees Section */
+        .fees-section {
+            background-color: var(--gray-light);
+            padding: 1.5rem 0;
+            margin: 2rem 0;
+            border-radius: var(--border-radius);
+        }
+
+        .fees-table {
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+
+        .fees-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .fees-table th, .fees-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .fees-table thead {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .fees-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .fee-amount {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .highlight {
+            background-color: rgba(255, 204, 0, 0.2);
+            font-weight: 600;
+        }
+
+        /* Registration Form */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: var(--border-radius-sm);
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--light);
+            color: var(--dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-column a:hover {
+            color: var(--secondary);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--accent);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow-lg);
+            z-index: 1100;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            :root {
+                --header-height: 80px;
+            }
+            
+            .mobile-menu-btn {
+                display: none;
+            }
+            
+            nav {
+                position: static;
+                width: auto;
+                height: auto;
+                background: transparent;
+                box-shadow: none;
+                flex-direction: row;
+                padding: 0;
+            }
+            
+            nav ul {
+                display: flex;
+                margin-top: 0;
+                gap: 5px;
+            }
+            
+            nav a {
+                color: white;
+                padding: 8px 15px;
+            }
+            
+            nav a:hover, nav a.active {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+            
+            .nav-overlay {
+                display: none;
+            }
+            
+            .hero {
+                padding: 4rem 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .workshop-details {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 992px) {
+            .workshop-details {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo-container">
+                        <div class="logo">GTT</div>
+                        <div class="school-name">Ghana Communication Technology</div>
+                    </div>
+                    <button class="mobile-menu-btn">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <nav>
+                        <ul>
+                            <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
+                            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+                            <li><a href="#workshop"><i class="fas fa-laptop-code"></i> Workshop</a></li>
+                            <li><a href="#fees"><i class="fas fa-money-bill-wave"></i> Fees</a></li>
+                            <li><a href="#register"><i class="fas fa-user-plus"></i> Register</a></li>
+                            <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Navigation Overlay -->
+        <div class="nav-overlay"></div>
+
+        <!-- Main Content -->
+        <main>
+            <!-- Hero Section -->
+            <section class="hero" id="home">
+                <div class="container">
+                    <h1>IT Educational Workshop Tour</h1>
+                    <p>An immersive learning experience for Level 300 IT students. Explore cutting-edge technologies and industry practices with Ghana Telecommunication Technology.</p>
+                    <a href="#register" class="btn"><i class="fas fa-user-plus"></i> Register Now</a>
+                </div>
+            </section>
+
+            <div class="container">
+                <!-- About Section -->
+                <section class="section" id="about">
+                    <h2 class="section-title"><i class="fas fa-info-circle"></i> About the Workshop</h2>
+                    <div class="card">
+                        <p>This intensive 5-day workshop is specifically designed for Level 300 IT students to bridge the gap between academic knowledge and industry requirements. Participants will gain hands-on experience with state-of-the-art telecommunications equipment and learn from industry experts.</p>
+                    </div>
+                </section>
+
+                <!-- Workshop Details -->
+                <section class="section" id="workshop">
+                    <h2 class="section-title"><i class="fas fa-laptop-code"></i> Workshop Details</h2>
+                    <div class="workshop-details">
+                        <div class="card">
+                            <h3><i class="fas fa-calendar-alt"></i> Schedule</h3>
+                            <ul>
+                                <li>Day 1: Telecom Infrastructure</li>
+                                <li>Day 2: Network Security</li>
+                                <li>Day 3: Wireless Systems</li>
+                                <li>Day 4: Data Center Operations</li>
+                                <li>Day 5: Career Applications</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-bullseye"></i> Objectives</h3>
+                            <ul>
+                                <li>Understand core telecom principles</li>
+                                <li>Gain practical equipment experience</li>
+                                <li>Learn emerging technologies</li>
+                                <li>Develop problem-solving skills</li>
+                                <li>Network with professionals</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h3><i class="fas fa-users"></i> Audience</h3>
+                            <ul>
+                                <li>Level 300 IT students</li>
+                                <li>Basic networking knowledge</li>
+                                <li>Telecom career interest</li>
+                                <li>Hands-on experience seekers</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fees Section -->
+                <section class="section fees-section" id="fees">
+                    <h2 class="section-title"><i class="fas fa-money-bill-wave"></i> Workshop Fees</h2>
+                    <div class="fees-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Fee Category</th>
+                                    <th>Description</th>
+                                    <th>Amount (GHS)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Registration Fee</td>
+                                    <td>One-time registration and processing</td>
+                                    <td class="fee-amount">250.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Tuition Fee</td>
+                                    <td>Complete workshop instruction and materials</td>
+                                    <td class="fee-amount">450.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Laboratory Fee</td>
+                                    <td>Access to specialized equipment and facilities</td>
+                                    <td class="fee-amount">220.00</td>
+                                </tr>
+                                <tr>
+                                    <td>Certificate Fee</td>
+                                    <td>Official workshop completion certificate</td>
+                                    <td class="fee-amount">250  .00</td>
+                                </tr>
+                                <tr class="highlight">
+                                    <td><strong>Total Fees</strong></td>
+                                    <td><strong>All inclusive workshop package</strong></td>
+                                    <td class="fee-amount"><strong>1170.00</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; font-style: italic;">All fees are rounded up to the nearest Ghana Cedi as per institutional policy.</p>
+                </section>
+
+                <!-- Registration Section -->
+                <section class="section" id="register">
+                    <h2 class="section-title"><i class="fas fa-user-plus"></i> Register for the Workshop</h2>
+                    <div class="card">
+                        <form id="workshop-registration">
+                            <div class="form-group">
+                                <label for="fullname">Full Name</label>
+                                <input type="text" id="fullname" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="institution">Educational Institution</label>
+                                <input type="text" id="institution" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="level">Current Level</label>
+                                <select id="level" class="form-control" required>
+                                    <option value="">Select your level</option>
+                                    <option value="300">Level 300</option>
+                                    <option value="200">Level 200</option>
+                                    <option value="400">Level 400</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment">Payment Method</label>
+                                <select id="payment" class="form-control" required>
+                                    <option value="">Select payment method</option>
+                                    <option value="mobile-money">Mobile Money</option>
+                                    <option value="bank-transfer">Bank Transfer</option>
+                                    <option value="card">Credit/Debit Card</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-paper-plane"></i> Submit Registration</button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer id="contact">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-column">
+                        <h3>Contact Us</h3>
+                        <ul>
+                            <li><a href="#"><i class="fas fa-map-marker-alt"></i> Accra, Ghana</a></li>
+                            <li><a href="tel:+233241234567"><i class="fas fa-phone"></i> +233 24 123 4567</a></li>
+                            <li><a href="mailto:info@gtt.edu.gh"><i class="fas fa-envelope"></i> info@gtt.edu.gh</a></li>
+                            <li><a href="#"><i class="fas fa-globe"></i> www.gtt.edu.gh</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Quick Links</h3>
+                        <ul>
+                            <li><a href="#home"><i class="fas fa-home"></i> Home</a></li>
+                            <li><a href="#about"><i class="fas fa-info-circle"></i> About Workshop</a></li>
+                            <li><a href="#fees"><i class="fas fa-money-bill-wave"></i> Fee Structure</a></li>
+                            <li><a href="#register"><i class="fas fa-user-plus"></i> Registration</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h3>Follow Us</h3>
+                        <ul>
+                            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+                            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+                            <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                            <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="copyright">
+                    <p>&copy; 2023 Ghana Telecommunication Technology. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Toast Notification -->
+        <div class="toast" id="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toast-message">Registration successful!</span>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const nav = document.querySelector('nav');
+        const navOverlay = document.querySelector('.nav-overlay');
+        const navLinks = document.querySelectorAll('nav a');
+
+        function toggleMenu() {
+            nav.classList.toggle('open');
+            navOverlay.classList.toggle('open');
+            document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : '';
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMenu);
+        navOverlay.addEventListener('click', toggleMenu);
+        
+        // Close menu when a link is clicked
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Form submission
+        const registrationForm = document.getElementById('workshop-registration');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show success message
+            toastMessage.textContent = 'Registration submitted successfully!';
+            toast.classList.add('show');
+            
+            // Reset form
+            this.reset();
+            
+            // Hide toast after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        });
+
+        // Active navigation link highlighting
+        const sections = document.querySelectorAll('section');
+        const navItems = document.querySelectorAll('nav a');
+
+        function setActiveNavItem() {
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${currentSection}`) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', setActiveNavItem);
+
+        // OS-specific styling (example)
+        function detectOS() {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            
+            if (/android/i.test(userAgent)) {
+                document.body.classList.add('android');
+            } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                document.body.classList.add('ios');
+            } else if (/win/i.test(userAgent)) {
+                document.body.classList.add('windows');
+            } else if (/mac/i.test(userAgent)) {
+                document.body.classList.add('macos');
+            }
+        }
+
+        detectOS();
+    </script>
+</body>
+</html>
